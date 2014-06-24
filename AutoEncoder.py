@@ -115,31 +115,3 @@ class AutoEncoder(object):
             updates.append((param, param - learning_rate * gparam))
         
         return (cost, updates)
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
