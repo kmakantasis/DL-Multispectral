@@ -25,6 +25,7 @@ class AutoEncoder(object):
                 z = f(W^' y + b^')
                 
             In this implementation we used tied weights, which means that :math:`W^' =W^T`. 
+            Additionally, function :math:`f()` is the sigmoid function.
             Using the above, the parameters of an autoencoder model can be represented
             by the set :math:`params = \{W, b, b^i\}`.
             
