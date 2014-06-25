@@ -55,13 +55,13 @@ class AutoEncoder(object):
                                                   high=4 * np.sqrt(6. / (n_hid + n_vis)),
                                                   size=(n_vis, n_hid)), 
                                                   dtype=theano.config.floatX)                                                 
-            self.W = theano.shared(value=initial_W, name='W')
+            W = theano.shared(value=initial_W, name='W')
             
         if not b_hid:
             initial_b_hid = np.zeros(n_hid, dtype=theano.config.floatX)            
             b_hid = theano.shared(value=initial_b_hid, name='bhid')
             
-        if not b_hid:
+        if not b_vis:
             initial_b_vis = np.zeros(n_vis, dtype=theano.config.floatX)
             b_vis = theano.shared(value=initial_b_vis, name='bvis')
             
