@@ -53,3 +53,13 @@ class HiddenLayer(object):
         self.output = (output if activation is None else activation(output))
         
         self.params = [ self.W, self.b]
+        
+        
+class MLP(object):
+    def __init__(self, rng, input, n_in, n_hidden, n_out):        
+        
+        
+        
+        
+        
+        
