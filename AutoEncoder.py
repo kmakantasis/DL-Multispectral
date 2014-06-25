@@ -3,10 +3,11 @@
 import numpy as np
 import theano
 import theano.tensor as T
+from theano.tensor.shared_randomstreams import RandomStreams
 
 
 class AutoEncoder(object):
-    def __init__(self, np_rng, n_vis, n_hid, input=None, W=None, b_hid=None, b_vis=None):
+    def __init__(self, np_rng, n_vis, n_hid, theano_rng=None, input=None, W=None, b_hid=None, b_vis=None):
         """
             Theory
             ++++++
@@ -64,11 +65,15 @@ class AutoEncoder(object):
             initial_b_vis = np.zeros(n_vis, dtype=theano.config.floatX)
             b_vis = theano.shared(value=initial_b_vis, name='bvis')
             
+        if not theano_rng:
+            theano_rng = RandomStreams(np_rng.randint(2 ** 30))
+            
             
         self.W = W
         self.W_prime = self.W.T
         self.b = b_hid
         self.b_prime = b_vis
+        self.theano_rng = theano_rng
         
         if input == None:
             self.x = T.dmatrix(name='input')
@@ -78,7 +83,7 @@ class AutoEncoder(object):
         self.params = [self.W, self.b, self.b_prime]
         
         
-    def get_cost_updates(self, learning_rate):
+    def get_cost_updates(self, learning_rate, corruption_level):
         """
             Function definition
             +++++++++++++++++++
@@ -101,8 +106,8 @@ class AutoEncoder(object):
                         during training phase.
                :rtype: float - list of floats
         """
-       
-        y = T.nnet.sigmoid(T.dot(self.x,self.W) + self.b)
+        corrupted_x = self.get_corrupted_input(self.x, corruption_level)
+        y = T.nnet.sigmoid(T.dot(corrupted_x,self.W) + self.b)
         z = T.nnet.sigmoid(T.dot(y, self.W_prime) + self.b_prime)
         
         L = T.sum(((self.x - z)**2)/2, axis=1)
@@ -116,3 +121,23 @@ class AutoEncoder(object):
             updates.append((param, param - learning_rate * gparam))
         
         return (cost, updates)
+        
+        
+    def get_corrupted_input(self, input, corruption_level):
+        """
+            Function definition
+            +++++++++++++++++++
+            
+            .. py:function:: get_corrupted_input(input, corruption_level)
+            
+               This function keeps ``1-corruption_level`` entries of the inputs the same
+               and zero-out randomly selected subset of size ``coruption_level``. Corruption 
+               process takes place using a binomial distribution.
+               
+               :param theano.tensor.TensorType input: a symbolic description of the input.
+               :param float corruption_level: the desired ration of corrupted entries.
+               :return: a corrupted version of the input.
+               :rtype: theano.tensor.TensorType
+        """
+        
+        return self.theano_rng.binomial(size=input.shape, n=1, p=1-corruption_level) * input 
