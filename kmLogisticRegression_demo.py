@@ -10,7 +10,7 @@ from LogisticRegression import LogisticRegression
 from loadDataset import load_data
 
 
-def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=600):
+def LogisticRegression_demo(learning_rate=0.13, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=600):
     datasets = load_data(dataset)
 
     train_set_x, train_set_y = datasets[0]
@@ -109,6 +109,6 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000, dataset='mnist.pkl
                           ' ran for %.1fs' % ((end_time - start_time)))
 
 if __name__ == '__main__':
-    sgd_optimization_mnist()
+    LogisticRegression_demo()
 
     
