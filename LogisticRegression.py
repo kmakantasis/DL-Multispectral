@@ -103,6 +103,12 @@ class LogisticRegression(object):
         
     def errors(self):      
         """
+            Function definition
+            +++++++++++++++++++
+            
+            .. py:function:: errors()
+            
+            
             Return a float representing the number of errors in the minibatch
             over the total number of examples of the minibatch ; zero one
             loss over the size of the minibatch
