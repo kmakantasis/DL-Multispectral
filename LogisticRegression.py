@@ -85,7 +85,7 @@ class LogisticRegression(object):
                optimization method during model training.
 
                :param float learning_rate: learning rate for a gradient based optimization algorithm.
-               :return: the evaluation of the cost function and the updates for the autoencoder 
+               :return: the evaluation of the cost function and the updates for the logistic regression 
                         model parameters that are going to be used by gradient based optimization 
                         during training phase.
                :rtype: float - list of floats
