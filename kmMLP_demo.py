@@ -7,11 +7,11 @@ import theano
 import theano.tensor as T
 from MLP import MLP
 import time
-from loadDataset import load_data
+from loadDataset import load_data, load_multi
 
 
 def MLP_demo(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, n_hidden=500):
-    datasets = load_data(dataset)
+    datasets = load_multi()
 
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
@@ -29,7 +29,7 @@ def MLP_demo(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000, data
     
     rng = np.random.RandomState(1234)
 
-    classifier = MLP(rng, x, y, n_in=28 * 28, n_hidden=n_hidden, n_out=10)
+    classifier = MLP(rng, x, y, n_in=103, n_hidden=n_hidden, n_out=9)
     
     test_model = theano.function(inputs=[index],
                                  outputs=classifier.errors(),
