@@ -7,11 +7,11 @@ import numpy
 import theano
 import theano.tensor as T
 from LogisticRegression import LogisticRegression
-from loadDataset import load_data
+from loadDataset import load_data, load_multi
 
 
 def LogisticRegression_demo(learning_rate=0.13, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=600):
-    datasets = load_data(dataset)
+    datasets = load_multi()
 
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
@@ -28,7 +28,7 @@ def LogisticRegression_demo(learning_rate=0.13, n_epochs=1000, dataset='mnist.pk
     x = T.matrix('x') 
     y = T.ivector('y')  
 
-    classifier = LogisticRegression(x, y, n_in=28 * 28, n_out=10)
+    classifier = LogisticRegression(x, y, n_in=103, n_out=9)
     
     test_model = theano.function(inputs=[index],
                                  outputs=classifier.errors(),
