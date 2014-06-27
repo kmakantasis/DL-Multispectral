@@ -4,12 +4,12 @@ import numpy as np
 import time
 import os 
 import sys
-from loadDataset import load_data
+from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=5, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=1):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=1):
     
-    datasets = load_data(dataset)
+    datasets = load_multi()
 
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
@@ -21,7 +21,7 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=5, pretrain_lr=
     numpy_rng = np.random.RandomState(89677)
     print '... building the model'
     
-    sda = StackedAutoEncoders(numpy_rng, n_ins=784, hidden_layer_sizes=[392, 196, 98], n_outs=10)
+    sda = StackedAutoEncoders(numpy_rng, n_ins=103, hidden_layer_sizes=[206, 206, 206], n_outs=9)
   
   
     #########################
