@@ -111,6 +111,7 @@ class AutoEncoder(object):
         z = T.nnet.sigmoid(T.dot(y, self.W_prime) + self.b_prime)
         
         L = T.sum(((self.x - z)**2)/2, axis=1)
+        #L = -T.sum(self.x * T.log(z) + (1 - self.x) * T.log(1 - z), axis=1)
         cost = T.mean(L)
         
         gparams = T.grad(cost, self.params)
