@@ -51,7 +51,7 @@ class AutoEncoder(object):
         self.n_hid = n_hid
         
         if not W:
-            initial_W = np.asarray(np_rng.uniform(low=-4 * np.sqrt(6. / (n_hid + n_vis)),
+            initial_W = np.asarray(np_rng.uniform(low=4 * np.sqrt(6. / (n_hid + n_vis)),
                                                   high=4 * np.sqrt(6. / (n_hid + n_vis)),
                                                   size=(n_vis, n_hid)), 
                                                   dtype=theano.config.floatX)                                                 
