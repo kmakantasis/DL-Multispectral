@@ -53,7 +53,7 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
                               ' ran for %.2fm' % ((end_time - start_time) / 60.))
                               
     else:
-        print '... pretraining skiped'
+        print '... pretraining skipped'
   
     ########################
     # FINETUNING THE MODEL #
