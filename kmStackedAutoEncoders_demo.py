@@ -7,7 +7,7 @@ import sys
 from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=False):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=True):
     
     datasets = load_multi()
 
@@ -21,7 +21,7 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
     numpy_rng = np.random.RandomState(89677)
     print '... building the model'
     
-    sda = StackedAutoEncoders(numpy_rng, n_ins=103, hidden_layer_sizes=[309, 309, 309], n_outs=9)
+    sda = StackedAutoEncoders(numpy_rng, n_ins=103, hidden_layer_sizes=[103, 103, 103, 103, 103, 103], n_outs=9)
   
   
     #########################
@@ -34,7 +34,7 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
     
         print '... pre-training the model'
     
-        corruption_levels = [.1, .2, .3]
+        corruption_levels = [.1, .2, .3, .3, .3, .3]
         for i in xrange(sda.n_layers):
         
             for epoch in xrange(pretraining_epochs):
