@@ -21,7 +21,7 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
     numpy_rng = np.random.RandomState(89677)
     print '... building the model'
     
-    sda = StackedAutoEncoders(numpy_rng, n_ins=103, hidden_layer_sizes=[206, 206, 206], n_outs=9)
+    sda = StackedAutoEncoders(numpy_rng, n_ins=103, hidden_layer_sizes=[309, 309, 309], n_outs=9)
   
   
     #########################
