@@ -7,7 +7,7 @@ import sys
 from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=1, pretrain_flag=False):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=False):
     
     datasets = load_multi()
 
