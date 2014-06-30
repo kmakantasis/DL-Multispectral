@@ -10,7 +10,7 @@ import time
 from loadDataset import load_data, load_multi
 
 
-def MLP_demo(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, n_hidden=309):
+def MLP_demo(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000, dataset='mnist.pkl.gz', batch_size=1, n_hidden=309):
     datasets = load_multi()
 
     train_set_x, train_set_y = datasets[0]
