@@ -7,7 +7,7 @@ import sys
 from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=1):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=1, pretrain_flag=False):
     
     datasets = load_multi()
 
@@ -27,30 +27,33 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
     #########################
     # PRETRAINING THE MODEL #
     #########################
-    print '... getting the pretraining functions'
-    pretraining_fns = sda.pretraining_functions(train_set_x, batch_size)
-    start_time = time.clock()
+    if pretrain_flag == True:
+        print '... getting the pretraining functions'
+        pretraining_fns = sda.pretraining_functions(train_set_x, batch_size)
+        start_time = time.clock()
     
-    print '... pre-training the model'
+        print '... pre-training the model'
     
-    corruption_levels = [.1, .2, .3]
-    for i in xrange(sda.n_layers):
+        corruption_levels = [.1, .2, .3]
+        for i in xrange(sda.n_layers):
         
-        for epoch in xrange(pretraining_epochs):
+            for epoch in xrange(pretraining_epochs):
             
-            c = []
-            for batch_index in xrange(n_train_batches):
-                c.append(pretraining_fns[i](index=batch_index,
-                         corruption=corruption_levels[i],
-                         lr=pretrain_lr))
-            print 'Pre-training layer %i, epoch %d, cost ' % (i, epoch),
-            print np.mean(c)
+                c = []
+                for batch_index in xrange(n_train_batches):
+                    c.append(pretraining_fns[i](index=batch_index,
+                             corruption=corruption_levels[i],
+                             lr=pretrain_lr))
+                print 'Pre-training layer %i, epoch %d, cost ' % (i, epoch),
+                print np.mean(c)
 
-    end_time = time.clock()
-    print >> sys.stderr, ('The pretraining code for file ' +
-                          os.path.split(__file__)[1] +
-                          ' ran for %.2fm' % ((end_time - start_time) / 60.))
-
+        end_time = time.clock()
+        print >> sys.stderr, ('The pretraining code for file ' +
+                              os.path.split(__file__)[1] +
+                              ' ran for %.2fm' % ((end_time - start_time) / 60.))
+                              
+    else:
+        print '... pretraining skiped'
   
     ########################
     # FINETUNING THE MODEL #
