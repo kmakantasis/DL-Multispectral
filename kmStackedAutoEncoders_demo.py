@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import scipy.io as io
 import time
 import os 
 import sys
 from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=True):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=1, pretrain_lr=0.001, training_epochs=1000, 
+                             dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=True, finetuning_flag=False):
     
     datasets = load_multi()
 
@@ -58,63 +60,83 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr
     ########################
     # FINETUNING THE MODEL #
     ########################
-  
-    print '... getting the finetuning functions'
-    train_fn, validate_model, test_model = sda.finetuning_functions(datasets, batch_size, finetune_lr)
+    if finetuning_flag == True:
+        print '... getting the finetuning functions'
+        train_fn, validate_model, test_model = sda.finetuning_functions(datasets, batch_size, finetune_lr)
 
-    print '... finetunning the model'
-    patience = 10 * n_train_batches  
-    patience_increase = 2. 
-    improvement_threshold = 0.995  
-    validation_frequency = min(n_train_batches, patience / 2)
+        print '... finetunning the model'
+        patience = 10 * n_train_batches  
+        patience_increase = 2. 
+        improvement_threshold = 0.995  
+        validation_frequency = min(n_train_batches, patience / 2)
                                   
-    best_validation_loss = np.inf
-    test_score = 0.
-    start_time = time.clock()
+        best_validation_loss = np.inf
+        test_score = 0.
+        start_time = time.clock()
 
-    done_looping = False
-    epoch = 0
+        done_looping = False
+        epoch = 0
 
-    while (epoch < training_epochs) and (not done_looping):
-        epoch = epoch + 1
-        for minibatch_index in xrange(n_train_batches):
-            train_fn(minibatch_index)
-            iter = (epoch - 1) * n_train_batches + minibatch_index
+        while (epoch < training_epochs) and (not done_looping):
+            epoch = epoch + 1
+            for minibatch_index in xrange(n_train_batches):
+                train_fn(minibatch_index)
+                iter = (epoch - 1) * n_train_batches + minibatch_index
 
-            if (iter + 1) % validation_frequency == 0:
-                validation_losses = validate_model()
-                this_validation_loss = np.mean(validation_losses)
-                print('epoch %i, minibatch %i/%i, validation error %f %%' %
-                      (epoch, minibatch_index + 1, n_train_batches,
-                       this_validation_loss * 100.))
-
-                if this_validation_loss < best_validation_loss:
-                    
-                    if (this_validation_loss < best_validation_loss *
-                        improvement_threshold):
-                        patience = max(patience, iter * patience_increase)
-                        
-                    best_validation_loss = this_validation_loss
-
-                    test_losses = test_model()
-                    test_score = np.mean(test_losses)
-                    print(('     epoch %i, minibatch %i/%i, test error of '
-                           'best model %f %%') %
+                if (iter + 1) % validation_frequency == 0:
+                    validation_losses = validate_model()
+                    this_validation_loss = np.mean(validation_losses)
+                    print('epoch %i, minibatch %i/%i, validation error %f %%' %
                           (epoch, minibatch_index + 1, n_train_batches,
-                           test_score * 100.))
+                           this_validation_loss * 100.))
 
-            if patience <= iter:
-                done_looping = True
-                break
+                    if this_validation_loss < best_validation_loss:
+                    
+                        if (this_validation_loss < best_validation_loss *
+                            improvement_threshold):
+                                patience = max(patience, iter * patience_increase)
+                        
+                        best_validation_loss = this_validation_loss
 
-    end_time = time.clock()
-    print(('Optimization complete with best validation score of %f %%,'
-           'with test performance %f %%') %
-                 (best_validation_loss * 100., test_score * 100.))
-    print >> sys.stderr, ('The training code for file ' +
-                          os.path.split(__file__)[1] +
-                          ' ran for %.2fm' % ((end_time - start_time) / 60.))
+                        test_losses = test_model()
+                        test_score = np.mean(test_losses)
+                        print(('     epoch %i, minibatch %i/%i, test error of '
+                               'best model %f %%') %
+                               (epoch, minibatch_index + 1, n_train_batches,
+                                test_score * 100.))
+
+                if patience <= iter:
+                    done_looping = True
+                    break
+
+        end_time = time.clock()
+        print(('Optimization complete with best validation score of %f %%,'
+               'with test performance %f %%') %
+               (best_validation_loss * 100., test_score * 100.))
+        print >> sys.stderr, ('The training code for file ' +
+                              os.path.split(__file__)[1] +
+                              ' ran for %.2fm' % ((end_time - start_time) / 60.))
+    else:
+        print '... finetuning skipped'
+                      
+    return sda
   
     
 if __name__ == '__main__':
-    StackedAutoEncoders_demo()
+    sda = StackedAutoEncoders_demo()
+    params = [sda.params[0].eval(), sda.params[1].eval(), sda.params[2].eval(), 
+              sda.params[3].eval(), sda.params[4].eval(), sda.params[5].eval()]
+    
+    save_weights = False
+    
+    if save_weights == True:
+        dict_params = {}
+        dict_params['W1'] = params[0]
+        dict_params['b1'] = params[1]
+        dict_params['W2'] = params[2]
+        dict_params['b2'] = params[3]
+        dict_params['W3'] = params[4]
+        dict_params['b3'] = params[5]
+        io.savemat('multi_data/TrainedWeights', dict_params)
+    
+    
