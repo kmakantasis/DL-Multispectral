@@ -8,8 +8,8 @@ import sys
 from loadDataset import load_data, load_multi
 from StackedAutoEncoders import StackedAutoEncoders
 
-def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=1, pretrain_lr=0.001, training_epochs=1000, 
-                             dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=True, finetuning_flag=False):
+def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=10, pretrain_lr=0.001, training_epochs=1000, 
+                             dataset='mnist.pkl.gz', batch_size=20, pretrain_flag=True, finetuning_flag=True):
     
     datasets = load_multi()
 
@@ -125,7 +125,8 @@ def StackedAutoEncoders_demo(finetune_lr=0.1, pretraining_epochs=1, pretrain_lr=
 if __name__ == '__main__':
     sda = StackedAutoEncoders_demo()
     params = [sda.params[0].eval(), sda.params[1].eval(), sda.params[2].eval(), 
-              sda.params[3].eval(), sda.params[4].eval(), sda.params[5].eval()]
+              sda.params[3].eval(), sda.params[4].eval(), sda.params[5].eval(),
+              sda.params[6].eval(), sda.params[7].eval()]
     
     save_weights = False
     
@@ -137,6 +138,8 @@ if __name__ == '__main__':
         dict_params['b2'] = params[3]
         dict_params['W3'] = params[4]
         dict_params['b3'] = params[5]
+        dict_params['W4'] = params[6]
+        dict_params['b4'] = params[7]
         io.savemat('multi_data/TrainedWeights', dict_params)
     
     
